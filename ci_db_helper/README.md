@@ -4,7 +4,7 @@ Extendable query builder to be used with CodeIgniter 2.2+. Extend any CI control
 
 ### Contributors
 
-This trait was written by Paul Burakov at SeamlessDocs in 2014.
+This trait was written by [Paul Burakov](https://github.com/pburakov) at SeamlessDocs in 2014.
 
 ### Basic Usage
 
