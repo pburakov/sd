@@ -1,6 +1,6 @@
 ## CI DB Helper Trait
 
-Extendable query builder to be used with CodeIgniter 2.2+. Extend any CI controller and use a trait to build MySQL/PostgreSQL queries. Also contains custom filters collection that prevent any SQL queries exposure, i.e. when building API controller with filtering.
+Extendable query builder to be used with CodeIgniter 2.2+. Extend any CI controller and use a trait to build MySQL/PostgreSQL queries. Also contains a collection of custom filters, that prevents any SQL queries exposure, i.e. when building API controller with filtering.
 
 ### Contributors
 
@@ -29,7 +29,7 @@ Values used in a query are escaped using CodeIgniter own DB class methods.
     
 ### Filters
 
-This helper contains a set of filters that can be used in the URL queries of a server request, to avoid any exposure of a "real" SQL syntax i.e.:
+This helper contains a set of filters that can be used in the URL queries of a server request, to avoid any exposure of a "real" SQL syntax. For example:
 
     $this->addTable('users');
     
@@ -39,17 +39,17 @@ This helper contains a set of filters that can be used in the URL queries of a s
     
     $this->setOffset($_GET['offset']);
     
-will convert the request 
+will convert this request 
 
     GET http://your_api.com/user?filters[0][column]=address&filters[0][operand]=contains&filters[0][value]=Sunset Drive&offset=4
     
-into query
+into this query
 
     SELECT * FROM users WHERE address LIKE '%Sunset Drive%' OFFSET 4
     
-Here are other filters example `contains` (LIKE), `is` (=), `is not` (!=), `is null`, `is greater than`, `is in` and so on. See method `convertConditionToOperand()` for full list of filters.
+Here are some other filters: `contains` (LIKE), `is` (=), `is not` (!=), `is null`, `is greater than`, `is between`, `is in` (requires an array of values) and so on. See method `convertConditionToOperand()` for full list of filters.
 
-Use caution to avoid Exceptions. Incoming arguments require additional validation using if a filter can be used with a column data type and a check of the column exists. This example uses CI DB class to acomplish that:
+Use caution to avoid DB errors as queries are not checked for validity. When used this way, incoming arguments require verification if a particular filter can be used in a combination with column's data type, and a check of the column exists in the schema. This raw example uses CI DB class to accomplish that:
 
     function clean($table, array $columns)
     {
