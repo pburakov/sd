@@ -47,9 +47,11 @@ into this query
 
     SELECT * FROM users WHERE address LIKE '%Sunset Drive%' OFFSET 4
     
-Here are some other filters: `contains` (LIKE), `is` (=), `is not` (!=), `is null`, `is greater than`, `is between`, `is in` (requires an array of values) and so on. See method `convertConditionToOperand()` for full list of filters.
+Other filters include `does no contain` (NOT LIKE), `is` (=), `is not` (!=), `is null`, `is greater than`, `is between`, `is in` (the latter two require an array of values) and more. See method `convertConditionToOperand()` for full list of filters.
 
-Use caution to avoid DB errors as queries are not checked for validity. When used this way, incoming arguments require verification if a particular filter can be used in a combination with column's data type, and a check of the column exists in the schema. This raw example uses CI DB class to accomplish that:
+Values used in a query are escaped using CodeIgniter own DB class methods.
+
+Use **caution** though, as columns and filters are not checked for valid SQL syntax, they may raise a DB error. Incoming arguments require verification if a particular filter can be used in a combination with the column data type or if it can be evaluated against. A check of the column exists in the schema may help. This raw example uses CI DB class to accomplish that:
 
     function clean($table, array $columns)
     {
@@ -57,6 +59,8 @@ Use caution to avoid DB errors as queries are not checked for validity. When use
     
         $db = $this->db;
         $allowed_fields = $db->list_fields($table);
+    
+        $out = [];
     
         foreach ((array)$data as $column) {
             if (in_array($column, $allowed_fields))
@@ -68,7 +72,7 @@ Use caution to avoid DB errors as queries are not checked for validity. When use
 
 ### Advanced usage
 
-The helper provides methods for generation of JOIN queries, UPDATE and INSERT statements querying multiple tables, selecting columns, custom filters, ordering and sorting. Use `buildQuery()` method to return raw SQL statement, or its parts
+The helper provides methods for generation of JOIN queries, UPDATE and INSERT statements, querying multiple tables, selecting columns, custom filters, ordering and sorting. Use `buildQuery()` method to return raw SQL statement, or its parts
 
 
     $this->addTable('users');
@@ -88,9 +92,13 @@ The helper provides methods for generation of JOIN queries, UPDATE and INSERT st
     $full_sql = $this->buildQuery();
      
     echo $full_sql;
-    // SELECT address, first_name, last_name FROM users LEFT JOIN groups ON users.group_id = groups.group_id WHERE address = '2nd Ave' ORDER BY last_name ASC, first_name ASC
+    // SELECT address, first_name, last_name 
+    // FROM users 
+    // LEFT JOIN groups ON users.group_id = groups.group_id 
+    // WHERE address = '2nd Ave' 
+    // ORDER BY last_name ASC, first_name ASC
 
-**Note** that `WHERE...` query parts have been reset after being built and "dumped" using `buildWhereClause()` method. Same applies to `buildSelectStatement()`, `buildJoinStatement()` and other methods. Entire SQL statement is reset and cannot be built or executed twice after `buildQuery()` and `quickSelect()`, `quickUpdate()` and so on. 
+**Note** that `WHERE...` query parts have been reset after being built and "dumped" using `buildWhereClause()` method. Same applies to `buildSelectStatement()`, `buildJoinStatement()` and other methods. Entire SQL statement is reset and cannot be built or executed twice after `buildQuery()` and `quickSelect()`, `quickUpdate()` (and so on) were called. 
 
 Please refer to the code for more info.
 
