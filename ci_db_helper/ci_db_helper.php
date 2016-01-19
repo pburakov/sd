@@ -15,7 +15,6 @@ trait DB_Helper
 
     protected $offset = 0;                       // Default OFFSET value
     protected $limit = null;                     // Default LIMIT value
-    protected $join_type = "LEFT JOIN";          // Default JOIN type
     protected $order_by = array();
 
 
@@ -121,11 +120,9 @@ trait DB_Helper
     }
 
 
-    protected function addJoin($table, $condition, $join_type = false)
+    protected function addJoin($table, $condition, $join_type = 'LEFT JOIN')
     {
         if ($table && $condition) {
-            if (!$join_type) $join_type = $this->join_type;
-
             $this->joins[] = "$join_type $table ON $condition";
         } else {
             throw new Exception ("Can't add JOIN statement. Missing parameters");
