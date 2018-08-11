@@ -1,0 +1,11 @@
+Simple file transliteration tool. Requires Python3
+
+Transliteration example: "арбуз -> arbuz"
+
+Usage:
+
+Transliterate file names in the folder:
+$ python translit.py
+
+Transliterate the contents of the file:
+$ python translit.py <file_name>
