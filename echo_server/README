@@ -1,0 +1,16 @@
+Simplistic echo server implementation
+
+Compile
+$ cd bin; cmake ..; make
+
+Using TCP connection:
+$ ./tcp_server [port_num]
+
+Test with:
+$ telnet localhost [port_num]
+
+Using UNIX domain socket:
+$ ./unix_socket [socket_path]
+
+Test with:
+$ nc -U [socket_path]
